@@ -1,7 +1,5 @@
 package com.zs.algorithm.sort;
 
-import com.alibaba.fastjson.JSON;
-
 import java.util.Arrays;
 
 /**
@@ -14,13 +12,13 @@ import java.util.Arrays;
 public class InsertSort implements SortInterface {
     @Override
     public int[] sort(int[] array) {
-        int [] newArray = Arrays.copyOf(array,  array.length);
+        int[] newArray = Arrays.copyOf(array, array.length);
 
         for (int i = 1; i < newArray.length; i++) {
-            int tempValue  = newArray[i];
+            int tempValue = newArray[i];
             int j = i;
-            while (j > 0 && tempValue < newArray[j-1]) {
-                newArray[j]  = newArray[j-1];
+            while (j > 0 && tempValue < newArray[j - 1]) {
+                newArray[j] = newArray[j - 1];
                 // 可以这么做，不要"最终判断"，便于理解。但是其实没必要，因为反正如果条件不满足，还得接着交换，倒不如直接放到最后判断j != i即可
                 //newArray[j] = tempValue;
                 j--;
@@ -35,7 +33,6 @@ public class InsertSort implements SortInterface {
     }
 
     public static void main(String[] args) {
-        InsertSort insertSort =   new InsertSort();
-        System.out.println(JSON.toJSONString(insertSort.sort(insertSort.getDefaultArray())));
+        PrintUtil.print(new InsertSort());
     }
 }
