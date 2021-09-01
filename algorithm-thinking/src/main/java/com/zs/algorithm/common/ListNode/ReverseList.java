@@ -110,16 +110,14 @@ public class ReverseList {
         ListNode firstNode = rootNode;
         ListNode secondNode = rootNode;
         // 倒数第N个位置其实就是需要两个间隔为N-1的指针
-        // 1.令firstNode=N secondNode=1
-        // 2.然后如果firstNode已经到达了最后一个位置，secondNode自然就到达了倒数第N个的位置
+        // 1.令firstNode=N secondNode=0
+        // 2.然后如果firstNode已经到达了最后一个位置，secondNode自然就到达了倒数第N+1个的位置
         for (int i = 0; i < n; i++) {
             firstNode = firstNode.next;
         }
-        // 3.但是我们要删除的是第N个元素，所以我们要找到的是倒数第N+1个元素，然后把他的next指向next.next。
-        // 所以让firstNode先行一步。当然这一步可以放在上面的for循环里，放这里纯粹是为了理解。
-        firstNode = firstNode.next;
+        // 但是我们要删除的是第N个元素，所以我们要找到的是倒数第N+1个元素，然后把他的next指向next.next。
         // 然后就ok了
-        while (firstNode != null) {
+        while (firstNode.next != null) {
             firstNode = firstNode.next;
             secondNode = secondNode.next;
         }
@@ -132,7 +130,7 @@ public class ReverseList {
      * 给定一个链表，两两交换其中相邻的节点，并返回交换后的链表。
      * <p>
      * 你不能只是单纯的改变节点内部的值，而是需要实际的进行节点交换。
-     * 输入：head = 0 [1,2,3,4]
+     * 输入：head = [1,2,3,4]
      * 输出：[2,1,4,3]
      *
      * @param head
@@ -159,6 +157,49 @@ public class ReverseList {
 
         }
         return rootNode.next;
+    }
+
+    /**
+     * 给你一个链表的头节点 head ，旋转链表，将链表每个节点向右移动 k 个位置。
+     * 输入：head = [1,2,3,4,5], k = 2
+     * 输出：[4,5,1,2,3]
+     *
+     * @param head
+     * @param k
+     * @return
+     */
+    public static ListNode rotateRight(ListNode head, int k) {
+        int length = 0;
+        ListNode rootNode = new ListNode(0);
+        rootNode.next = head;
+        ListNode current = rootNode;
+        while (current.next != null) {
+            length++;
+            current = current.next;
+        }
+        // 长度为1或者等长
+        if (length <= 1 || length == k) {
+            return head;
+        }
+        if (k > length) {
+            k = k % length;
+        }
+        // 找到倒数第k+1个的位置,断开链表，并把从k-末尾的链表挂在头部 双指针 firstNode与secondNode距离是k
+        ListNode firstNode = rootNode;
+        for (int i = 0; i < k; i++) {
+            firstNode = firstNode.next;
+        }
+        ListNode secondNode = rootNode;
+        while (firstNode.next != null) {
+            firstNode = firstNode.next;
+            secondNode = secondNode.next;
+        }
+        // 断开链表，并把从k-末尾的链表挂在头部
+        firstNode.next = rootNode.next;
+        rootNode.next = secondNode.next;
+        secondNode.next = null;
+        return rootNode.next;
+
     }
 
     /**
@@ -201,7 +242,7 @@ public class ReverseList {
             currentNode.next = new ListNode(i + 1);
             currentNode = currentNode.next;
         }
-        return head1;
+        return head1.next;
     }
 
     public static void main(String[] args) {
@@ -215,7 +256,9 @@ public class ReverseList {
 
         //printListNode(mergeTwoLists(buildListNode(4), buildListNode(3)));
 
-        printListNode(swapPairs(buildListNode(4)));
+        //printListNode(swapPairs(buildListNode(4)));
+
+        printListNode(rotateRight(buildListNode(5), 7));
     }
 
 
