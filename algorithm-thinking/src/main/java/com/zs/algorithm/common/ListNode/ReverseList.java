@@ -127,6 +127,65 @@ public class ReverseList {
         return rootNode.next;
     }
 
+    /**
+     * 两两交换
+     * 给定一个链表，两两交换其中相邻的节点，并返回交换后的链表。
+     * <p>
+     * 你不能只是单纯的改变节点内部的值，而是需要实际的进行节点交换。
+     * 输入：head = 0 [1,2,3,4]
+     * 输出：[2,1,4,3]
+     *
+     * @param head
+     * @return
+     */
+    public static ListNode swapPairs(ListNode head) {
+        ListNode rootNode = new ListNode(0);
+        rootNode.next = head;
+        ListNode current = rootNode;
+        while (current.next != null && current.next.next != null) {
+            ListNode firstNode = current.next;
+            ListNode secondNode = current.next.next;
+            /** 交换第一个，第二个节点，并修改头结点指针 begin**/
+            // 第一个节点next指向第三个节点
+            firstNode.next = secondNode.next;
+            // 第二个节点next指向第一个节点
+            secondNode.next = firstNode;
+            // head节点指向第二个节点
+            current.next = secondNode;
+            /** 交换第一个，第二个节点，并修改头结点指针 end**/
+
+            // 当前指针走一下
+            current = firstNode;
+
+        }
+        return rootNode.next;
+    }
+
+    /**
+     * 21. 合并两个有序链表
+     *
+     * @param
+     */
+    public static ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        ListNode rootNode = new ListNode(0);
+        ListNode currentNode = rootNode;
+        while (l1 != null && l2 != null) {
+            //   谁小给谁放前面
+            if (l1.val <= l2.val) {
+                currentNode.next = l1;
+                l1 = l1.next;
+            } else {
+                currentNode.next = l2;
+                l2 = l2.next;
+            }
+            currentNode = currentNode.next;
+        }
+        // 最后肯定剩下一个非空的。搞进去就行了
+        currentNode.next = l1 != null ? l1 : l2;
+        return rootNode.next;
+    }
+
+
     public static void printListNode(ListNode node) {
         ListNode currentNode = node;
         while (currentNode != null) {
@@ -135,20 +194,29 @@ public class ReverseList {
         }
     }
 
+    public static ListNode buildListNode(int num) {
+        ListNode head1 = new ListNode(0);
+        ListNode currentNode = head1;
+        for (int i = 0; i < num; i++) {
+            currentNode.next = new ListNode(i + 1);
+            currentNode = currentNode.next;
+        }
+        return head1;
+    }
+
     public static void main(String[] args) {
-        ListNode head1 = new ListNode(1);
-        ListNode head2 = new ListNode(2);
-        ListNode head3 = new ListNode(3);
-        ListNode head4 = new ListNode(4);
-        head1.next = head2;
-        head2.next = head3;
-        head3.next = head4;
+        ListNode head1 = buildListNode(4);
         // 反转列表
         //ListNode node = reverseList(head1);
         // 指定位置反转
         //printListNode(reverseList(head1, 2, 4));
         // 移除链表的倒数第N个元素
-        printListNode(removeNthFromEnd(head1, 3));
+        //printListNode(removeNthFromEnd(head1, 3));
+
+        //printListNode(mergeTwoLists(buildListNode(4), buildListNode(3)));
+
+        printListNode(swapPairs(buildListNode(4)));
     }
+
 
 }
