@@ -1,5 +1,8 @@
 package com.zs.algorithm.common.ListNode;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * 反转链表
  */
@@ -226,6 +229,62 @@ public class ReverseList {
         return rootNode.next;
     }
 
+    /**
+     * 删除链表中重复元素
+     * 存在一个按升序排列的链表，给你这个链表的头节点 head ，请你删除所有重复的元素，使每个元素 只出现一次 。
+     *
+     * @param head
+     * @return
+     */
+    public static ListNode deleteDuplicates(ListNode head) {
+        ListNode current = head;
+        while (current != null && current.next != null) {
+            //  当前节点与下个节点数字相同
+            if (current.val == current.next.val) {
+                // 当前节点指向下下个节点
+                current.next = current.next.next;
+            } else {
+                // 当前节点与下个节点数字不同，就指向下一个
+                current = current.next;
+            }
+        }
+        return head;
+    }
+
+    /**
+     * 删除链表中所有重复的节点
+     * 输入：head = [1,2,3,3,4,4,5]
+     * 输出：[1,2,5]
+     *
+     * @param head
+     * @return
+     */
+    public static ListNode deleteDuplicates2(ListNode head) {
+        // 1 1 2 3 4
+        ListNode rootNode = new ListNode(0);
+        rootNode.next = head;
+        ListNode current = rootNode;
+        while (current.next != null && current.next.next != null) {
+            // 一旦发现了有重复的元素,
+            if (current.next.val == current.next.next.val) {
+                //  记录一下这个值,然后把指针指向不是这个值的元素
+                int i = current.next.val;
+                // 一旦是就删除。要注意判空
+                while (current.next != null && current.next.val == i) {
+                    System.out.println("current.next.val=>" + current.val);
+                    current.next = current.next.next;
+                }
+            } else {
+                current = current.next;
+            }
+
+        }
+        return rootNode.next;
+    }
+
+    /**
+     * @param node
+     */
 
     public static void printListNode(ListNode node) {
         ListNode currentNode = node;
@@ -245,6 +304,16 @@ public class ReverseList {
         return head1.next;
     }
 
+    public static ListNode buildListNodeFromArray(List<Integer> nums) {
+        ListNode head1 = new ListNode(0);
+        ListNode currentNode = head1;
+        for (Integer num : nums) {
+            currentNode.next = new ListNode(num);
+            currentNode = currentNode.next;
+        }
+        return head1.next;
+    }
+
     public static void main(String[] args) {
         ListNode head1 = buildListNode(4);
         // 反转列表
@@ -258,7 +327,11 @@ public class ReverseList {
 
         //printListNode(swapPairs(buildListNode(4)));
 
-        printListNode(rotateRight(buildListNode(5), 7));
+        //printListNode(rotateRight(buildListNode(5), 7));
+
+        //printListNode(deleteDuplicates(buildListNodeFromArray(Arrays.asList(1, 1, 1, 2, 2, 3, 4))));
+
+        printListNode(deleteDuplicates2(buildListNodeFromArray(Arrays.asList(1, 1, 1, 2, 2, 3, 4))));
     }
 
 
