@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * 反转链表
+ * 链表
  */
 public class ReverseList {
     /**
@@ -280,6 +280,38 @@ public class ReverseList {
 
         }
         return rootNode.next;
+    }
+
+    /**
+     * 给你一个链表的头节点 head 和一个特定值 x ，请你对链表进行分隔，使得所有 小于 x 的节点都出现在 大于或等于 x 的节点之前。
+     * <p>
+     * 你应当 保留 两个分区中每个节点的初始相对位置。
+     *
+     * @param head
+     * @param x
+     * @return
+     */
+    public ListNode partition(ListNode head, int x) {
+        ListNode smallNode = new ListNode(0);
+        ListNode largeNode = new ListNode(0);
+        // 定义遍历指针
+        ListNode tmpSmallNode = smallNode;
+        ListNode tmpLargeNode = largeNode;
+        // [2,1,3,4,1]  输入 2
+        while (head != null) {
+            if (head.val < x) {
+                tmpSmallNode.next = head;
+                tmpSmallNode = tmpSmallNode.next;
+            } else {
+                tmpLargeNode.next = head;
+                tmpLargeNode = tmpLargeNode.next;
+            }
+            head = head.next;
+        }
+        // 处理最后一位的next指针
+        tmpLargeNode.next = null;
+        tmpSmallNode.next = largeNode.next;
+        return smallNode.next;
     }
 
     /**
