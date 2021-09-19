@@ -129,23 +129,5 @@ public class RecurseCollection {
         return -1;
     }
 
-    /**
-     * @param s
-     * @return
-     * @description 递归判断一个字符串是否是回文字符串
-     * @author rico
-     * @created 2017年5月10日 下午5:45:50
-     */
-    public static boolean isPalindromeString_recursive(String s) {
-        int start = 0;
-        int end = s.length() - 1;
-        if (start <= end) {
-        } else {
-
-        }
-
-        return true;
-    }
-
 
 }
