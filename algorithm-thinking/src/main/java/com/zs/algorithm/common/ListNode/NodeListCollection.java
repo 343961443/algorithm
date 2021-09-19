@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * 链表
  */
-public class ReverseList {
+public class NodeListCollection {
     /**
      * 反转链表的一般实现
      *
@@ -59,11 +59,14 @@ public class ReverseList {
      * 从指定位置反转链表
      *
      * @param head
-     * @param m
-     * @param n
+     * @param left
+     * @param right
      * @return
      */
-    public static ListNode reverseList(ListNode head, int m, int n) {
+    public static ListNode reverseList(ListNode head, int left, int right) {
+        if (left == right) {
+            return head;
+        }
         ListNode headRoot = new ListNode(0);
         headRoot.next = head;
         //  m的位置的前一个节点，也就是m-1索引位置的节点
@@ -79,12 +82,13 @@ public class ReverseList {
         ListNode current = headRoot;
         int i = 0;
         while (current != null) {
-            if (i == m - 1) {
+            if (i == left - 1) {
                 pre = current;
-            } else if (i == m) {
+            } else if (i == left) {
                 start = current;
-            } else if (i == n) {
+            } else if (i == right) {
                 end = current;
+                break;
             }
             current = current.next;
             i++;
@@ -315,15 +319,140 @@ public class ReverseList {
     }
 
     /**
+     * 环形链表 。证明有环
+     *
+     * @param head
+     * @return
+     */
+    public static boolean hasCycle(ListNode head) {
+        //一般使用快慢指针。  如果有环，快慢指针必定相遇于环内。
+        ListNode slowNode = head;
+        ListNode fastNode = head;
+        while (slowNode != null && fastNode != null && fastNode.next != null) {
+            slowNode = slowNode.next;
+            fastNode = fastNode.next.next;
+            if (slowNode == fastNode) {
+                return true;
+            }
+        }
+        return false;
+
+    }
+
+    /**
+     * 给定一个链表，返回链表开始入环的第一个节点。 如果链表无环，则返回 null。
+     */
+
+    public static ListNode detectCycle(ListNode head) {
+        // 有没有环这个问题 ，我们 已经 用 快慢 指针解决了
+        // 现在要找到入环的第一个位置。
+        // 先说结论假设起点到入环的第一个位置距离为L,  环的长度为 R, 在L+S的环的位置相遇。
+        // 此时快慢指针路程  2(L + S)（慢指针走的路程）=  L+S+NR(快指针走的路程已经绕环N圈了)
+        // 得出结论 L+S=NR 再次推导 L=NR-S。 
+        // 这个等式意味着：
+        // 当快慢指针相遇时，如果此时新建立两个指针AB，两个指针每次走一步
+        // A从起点出发走L步走到环入口位置时
+        // B从相遇点出发走NR-S步意思就是绕N圈，然后退S步，是不是刚好走到入口位置
+        ListNode slowNode = head;
+        ListNode fastNode = head;
+
+        while (slowNode != null && fastNode != null && fastNode.next != null) {
+            slowNode = slowNode.next;
+            fastNode = fastNode.next.next;
+            if (slowNode == fastNode) {
+                ListNode secondSlowNode = head;
+                // 有可能链表 只有两个元素，而且成环。。这个时候，，secondSlowNode天然就=slowNode
+                while (secondSlowNode != slowNode) {
+                    secondSlowNode = secondSlowNode.next;
+                    slowNode = slowNode.next;
+                    //不要在这里return
+                }
+                return secondSlowNode;
+            }
+        }
+        return null;
+
+
+    }
+
+    /**
+     * 重排链表
+     * 给定一个单链表 L 的头节点 head ，单链表 L 表示为：
+     * <p>
+     *  L0 → L1 → … → Ln-1 → Ln 
+     * 请将其重新排列后变为：
+     * <p>
+     * L0 → Ln → L1 → Ln-1 → L2 → Ln-2 → …
+     * <p>
+     * 不能只是单纯的改变节点内部的值，而是需要实际的进行节点交换。
+     *
+     * @param head
+     * @return
+     */
+    public static void reorderList(ListNode head) {
+        // 第一步拆分成两个链表
+        ListNode slowNode = head;
+        ListNode fastNode = head;
+        while (fastNode != null && fastNode.next != null) {
+            slowNode = slowNode.next;
+            fastNode = fastNode.next.next;
+        }
+        //printListNode(head);
+        ListNode secondNode = slowNode.next;
+        slowNode.next = null;
+        //  第二步反转第二个链表
+        ListNode secondNodeRevered = null;
+        while (secondNode != null) {
+
+            ListNode nextNode = secondNode.next;
+
+            secondNode.next = secondNodeRevered;
+
+            secondNodeRevered = secondNode;
+
+            secondNode = nextNode;
+
+        }
+        //printListNode(secondNodeRevered);
+        // 第三部合并head和secondNodeRevered
+        //printListNode(head);
+        ListNode current1 = head;
+        ListNode current2 = secondNodeRevered;
+
+        while (current1 != null && current2 != null) {
+            // 断开第一个节点
+            ListNode tmpNode = current1.next;
+            current1.next = current2;
+
+            // 断开第二个节点
+            ListNode tmpSecondNode = current2.next;
+            current2.next = tmpNode;
+
+
+            current1 = tmpNode;
+            current2 = tmpSecondNode;
+        }
+        //printListNode(head);
+    }
+
+    /**
      * @param node
      */
 
     public static void printListNode(ListNode node) {
         ListNode currentNode = node;
+        if (currentNode == null) {
+            System.out.println("[]");
+            return;
+        }
+        String string = "[";
         while (currentNode != null) {
-            System.out.println(currentNode.val);
+            string += currentNode.val + ",";
             currentNode = currentNode.next;
         }
+        string = string.substring(0, string.length() - 1);
+        string += "]";
+        System.out.println(string);
     }
 
     public static ListNode buildListNode(int num) {
@@ -363,7 +492,10 @@ public class ReverseList {
 
         //printListNode(deleteDuplicates(buildListNodeFromArray(Arrays.asList(1, 1, 1, 2, 2, 3, 4))));
 
-        printListNode(deleteDuplicates2(buildListNodeFromArray(Arrays.asList(1, 1, 1, 2, 2, 3, 4))));
+        //printListNode(deleteDuplicates2(buildListNodeFromArray(Arrays.asList(1, 1, 1, 2, 2, 3, 4))));
+        ListNode node = buildListNodeFromArray(Arrays.asList(1, 2, 3, 4));
+        reorderList(node);
+
     }
 
 
