@@ -1,8 +1,6 @@
 package com.zs.algorithm.common;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 /**
  * 递归
@@ -129,5 +127,126 @@ public class RecurseCollection {
         return -1;
     }
 
+    /**
+     * 给你一个由 '1'（陆地）和 '0'（水）组成的的二维网格，请你计算网格中岛屿的数量。
+     * <p>
+     * 岛屿总是被水包围，并且每座岛屿只能由水平方向和/或竖直方向上相邻的陆地连接形成。
+     * <p>
+     * 此外，你可以假设该网格的四条边均被水包围。
+     * <p>
+     * <p>
+     * <p>
+     * 来源：力扣（LeetCode）
+     * 链接：https://leetcode-cn.com/problems/number-of-islands
+     * 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+     * <p>
+     * 输入：grid = [
+     * ["1","1","1","1","0"],
+     * ["1","1","0","1","0"],
+     * ["1","1","0","0","0"],
+     * ["0","0","0","0","0"]
+     * ]
+     * 输出：1
+     * 输入：grid = [
+     * ["1","1","0","0","0"],
+     * ["1","1","0","0","0"],
+     * ["0","0","1","0","0"],
+     * ["0","0","0","1","1"]
+     * ]
+     * 输出：3
+     * <p>
+     * [["1","1","1"],
+     * ["0","1","0"],
+     * ["1","1","1"]]
+     *
+     * @param grid
+     * @return
+     */
+    public int numIslands(char[][] grid) {
+        int numIsLands = 0;
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[i].length; j++) {
+                if (grid[i][j] == 1) {
+                    numIsLands++;
+                    // 把后面挨着的岛屿都变成水
+                    dsfMarkLandToWater(grid, i, j);
+                }
+            }
+        }
+        return numIsLands;
+    }
+
+    public void dsfMarkLandToWater(char[][] grid, int i, int j) {
+        if (i >= grid.length || j >= grid[i].length || grid[i][j] == '0') {
+            return;
+        }
+        grid[i][j] = '0';
+        dsfMarkLandToWater(grid, i + 1, j);
+        dsfMarkLandToWater(grid, i, j + 1);
+        /**
+         *   [["1","1","1"],
+         *    ["0","1","0"],
+         *    ["1","1","1"]]
+         *    以此举例表明下面这两行时必须的。因为遍历到第三行第二列时，可能要向左。
+         */
+        dsfMarkLandToWater(grid, i - 1, j);
+        dsfMarkLandToWater(grid, i, j - 1);
+    }
+
+    /**
+     * 给定一个仅包含数字 2-9 的字符串，返回所有它能表示的字母组合。答案可以按 任意顺序 返回。
+     * <p>
+     * 给出数字到字母的映射如下（与电话按键相同）。注意 1 不对应任何字母。
+     * Map<Character, String> phoneMap = new HashMap<Character, String>() {{
+     * put('2', "abc");
+     * put('3', "def");
+     * put('4', "ghi");
+     * put('5', "jkl");
+     * put('6', "mno");
+     * put('7', "pqrs");
+     * put('8', "tuv");
+     * put('9', "wxyz");
+     * }};
+     *
+     * <p>
+     * 来源：力扣（LeetCode）
+     * 链接：https://leetcode-cn.com/problems/letter-combinations-of-a-phone-number
+     * 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+     *
+     * @param digits
+     * @return
+     */
+    public List<String> letterCombinations(String digits) {
+        Map<Character, String> phoneMap = new HashMap<Character, String>() {{
+            put('2', "abc");
+            put('3', "def");
+            put('4', "ghi");
+            put('5', "jkl");
+            put('6', "mno");
+            put('7', "pqrs");
+            put('8', "tuv");
+            put('9', "wxyz");
+        }};
+        List<String> list = new ArrayList<>();
+        StringBuffer sb = new StringBuffer();
+        int dept = 0;
+        // 1.深度
+        // 2.组合
+        backTrackLetter(phoneMap, list, sb, dept, digits);
+        return list;
+    }
+
+    private void backTrackLetter(Map<Character, String> phoneMap, List<String> list, StringBuffer sb, int dept, String digits) {
+        if (dept >= digits.length()) {
+            list.add(sb.toString());
+            return;
+        }
+        String strCombine = phoneMap.get(digits.charAt(dept));
+        for (int i = 0; i < strCombine.length(); i++) {
+            sb.append(strCombine.charAt(i));
+            backTrackLetter(phoneMap, list, sb, dept + 1, digits);
+            sb.deleteCharAt(i);
+        }
+    }
 
 }
